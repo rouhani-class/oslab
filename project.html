@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+
+<!-- Mirrored from abelay.github.io/6828seminar/project.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 07 Feb 2021 10:45:07 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="main.css" rel="stylesheet">
+  <script src="../../code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="../../cdn.jsdelivr.net/npm/popper.js%401.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+  <script src="../../stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+  <title>6.828: Operating Systems Research Seminar</title>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
+  <div class="navbar-brand">
+    <img src="img/mit_logo.svg" class="d-inline-block align-top" alt="">
+  </div>
+  <a class="navbar-brand" href="#">6.828</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <ul class="navbar-nav nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="index.html">Overview</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="schedule.html">Schedule <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="lab1.html">Lab 1</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" href="project.html">Project</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://piazza.com/mit/fall2020/6828">Piazza</a>
+      </li>
+    </ul>
+    <span class="navbar-text">
+      <i>Fall, 2020</i>
+    </span>
+  </div>
+</nav>
+
+<div class="container-fluid">
+
+<!-- SCHEDULE SECTION -->
+<div class="col-lg-10 my-3 mx-auto">
+
+<h1>6.828: Project</h1>
+
+<h2>Introduction</h2>
+<p>
+The class project is a major component of 6.828. A good project will make a new
+contribution, rather than implementing an existing system or idea. It can be
+related to your graduate research, as long as it overlaps with the themes in the
+course.  Collaboration is encouraged but not required: each project can be done
+in groups of two or individually. Projects will be evaluated based on a final
+presentation and a project write up.
+
+<h2>Milestones</h2>
+<ul>
+  <li>Project Proposal (9/29): Send us a short email describing your project
+idea, how you plan to evaluate it, and your teammate (if applicable).</li>
+  <li>Design Write Up (11/6): Send us a draft of your project write up, focusing
+on the motivation and design of your system, sans an evaluation.</li>
+  <li>Full Write Up (12/9): Send us a complete version of your write up,
+including everything in the design write up plus an evaluation of your
+system.</li>
+</ul>
+
+<h2>Project Ideas</h2>
+
+<p>You're welcome to propuse your own project ideas. Here are some suggestions
+that might be helpful starting points.
+
+<p>Shenango:
+<ul>
+  <li>Shenango currently provides a highly optimized implementation of TCP/IP,
+but its transport-layer processing still incurs significant overheads, wasting
+several cores on I/O to sustain max throughput. Instead, use rDMA hardware (Like
+the Mellanox ConnectX-4) to offload transport layer processing into hardware
+(see <a href="https://github.com/linux-rdma/rdma-core">libibverbs</a>). Build
+and evaluate support for two-sided rDMA in the Shenango runtime. How much more
+efficient could Shenango be if we moved these functions into hardware?</li>
+  <li>Power management features like CPU frequency scaling and parking idle
+cores can make CPUs more energy proportional. Unfortunately, these features have
+high transition delays, and typically harm tail latency. Design a scheduling
+policy in Shenango that hides these latencies from latency-sensitive
+applications, while still reducing power consumption when CPU load is low.</li>
+  <li>Compatibility can be a major barrier to adoption for systems, even if they
+significantly improve performance. For example, Shenango’s pthread support is
+more than 10x faster than Linux, but lacks support for thread-local storage.
+Using the <a
+href="https://www.kernel.org/doc/html/latest/x86/x86_64/fsgs.html">latest Intel
+instructions</a>, investigate whether this feature could be supported without
+sacrificing efficiency.</li>
+</ul>
+
+<p>Datacenter tax:
+<ul>
+  <li>One of the biggest challenges of accelerating the datacenter tax (memory
+copying, serialization, RPC, memory allocation, etc.) is its fine-grained and
+tightly coupled nature, making the high latency of PCIe bus a barrier to
+deploying accelerators for these functions. Instead, use a dedicated CPU core to
+simulate a new specialized hardware design that is integrated on-die with the
+processor (i.e., cache coherent and low latency). Evaluate how much your
+hypothetical accelerator could improve efficiency overall.</li>
+</ul>
+
+<p>Library operating systems and containers:
+<ul>
+  <li>Using a tool like <a href="https://github.com/google/gvisor">gVisor</a>,
+could you transform entire legacy software systems into simple functions that
+you can call and stitch together?</li>
+</ul>
+
+</div>
+</div>
+
+</body>
+
+<!-- Mirrored from abelay.github.io/6828seminar/project.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 07 Feb 2021 10:45:07 GMT -->
+</html>
